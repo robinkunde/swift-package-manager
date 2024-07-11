@@ -141,7 +141,7 @@ public struct ToolsVersion: Equatable, Hashable, Codable, Sendable {
     public func validateToolsVersion(
         _ currentToolsVersion: ToolsVersion,
         packageIdentity: PackageIdentity,
-        packageVersion: String? = .none
+        packageVersion: ResolvedPackageVersion? = .none
     ) throws {
         switch self._validateToolsVersion(currentToolsVersion) {
         case .valid:

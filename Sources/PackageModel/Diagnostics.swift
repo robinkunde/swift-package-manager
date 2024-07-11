@@ -18,7 +18,7 @@ public struct RequireNewerTools: Error, CustomStringConvertible {
     public let packageIdentity: PackageIdentity
 
     /// The version of the package.
-    public let packageVersion: String?
+    public let packageVersion: ResolvedPackageVersion?
 
     /// The installed tools version.
     public let installedToolsVersion: ToolsVersion
@@ -28,7 +28,7 @@ public struct RequireNewerTools: Error, CustomStringConvertible {
 
     public init(
         packageIdentity: PackageIdentity,
-        packageVersion: String? = nil,
+        packageVersion: ResolvedPackageVersion? = nil,
         installedToolsVersion: ToolsVersion,
         packageToolsVersion: ToolsVersion
     ) {
@@ -54,7 +54,7 @@ public struct UnsupportedToolsVersion: Error, CustomStringConvertible {
     public let packageIdentity: PackageIdentity
 
     /// The version of the package.
-    public let packageVersion: String?
+    public let packageVersion: ResolvedPackageVersion?
 
     /// The current tools version support by the tools.
     public let currentToolsVersion: ToolsVersion
@@ -68,7 +68,7 @@ public struct UnsupportedToolsVersion: Error, CustomStringConvertible {
 
     public init(
         packageIdentity: PackageIdentity,
-        packageVersion: String? = nil,
+        packageVersion: ResolvedPackageVersion? = nil,
         currentToolsVersion: ToolsVersion,
         packageToolsVersion: ToolsVersion
     ) {

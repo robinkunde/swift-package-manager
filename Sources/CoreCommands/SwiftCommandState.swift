@@ -401,7 +401,7 @@ public final class SwiftCommandState {
         if options.caching.shouldDisableManifestCaching {
             observabilityScope
                 .emit(
-                    warning: "'--disable-package-manifest-caching' option is deprecated; use '--manifest-caching' instead"
+                    warning: "'--disable-package-manifest-caching' option is deprecated; use '--manifest-cache' instead"
                 )
         }
 

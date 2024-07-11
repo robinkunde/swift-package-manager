@@ -27,6 +27,7 @@ import struct PackageModel.PackageIdentity
 import struct PackageModel.PackageReference
 import struct PackageModel.TargetDescription
 import struct PackageModel.ToolsVersion
+import enum PackageModel.ResolvedPackageVersion
 import class PackageRegistry.RegistryClient
 import struct TSCUtility.Version
 
@@ -78,7 +79,7 @@ extension Workspace {
             packageIdentity: PackageIdentity,
             packageKind: PackageReference.Kind,
             packageLocation: String,
-            packageVersion: (version: Version?, revision: String?)?,
+            packageVersion: ResolvedPackageVersion?,
             identityResolver: any IdentityResolver,
             dependencyMapper: any DependencyMapper,
             fileSystem: any FileSystem,
@@ -303,6 +304,7 @@ extension Workspace {
                 defaultLocalization: manifest.defaultLocalization,
                 platforms: manifest.platforms,
                 version: manifest.version,
+                branch: manifest.branch,
                 revision: manifest.revision,
                 toolsVersion: manifest.toolsVersion,
                 pkgConfig: manifest.pkgConfig,

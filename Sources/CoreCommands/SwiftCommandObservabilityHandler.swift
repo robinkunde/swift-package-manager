@@ -124,6 +124,9 @@ public struct SwiftCommandObservabilityHandler: ObservabilityHandlerProvider {
         // for raw progress reporting
         func progress(step: Int64, total: Int64, description: String?) {
             self.queue.async(group: self.sync) {
+                guard self.outputStream.isTTY else {
+                    return
+                }
                 self.progressAnimation.update(
                     step: step > Int.max ? Int.max : Int(step),
                     total: total > Int.max ? Int.max : Int(total),
@@ -156,7 +159,9 @@ public struct SwiftCommandObservabilityHandler: ObservabilityHandlerProvider {
         }
 
         private func write(_ output: String) {
-            self.progressAnimation.clear()
+            if self.outputStream.isTTY {
+                self.progressAnimation.clear()
+            }
             var output = output
             if !output.hasSuffix("\n") {
                 output += "\n"

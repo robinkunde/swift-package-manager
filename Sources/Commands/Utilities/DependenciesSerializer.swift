@@ -30,6 +30,7 @@ final class PlainTextDumper: DependenciesDumper {
                     hanger = prefix + "└── "
                 }
 
+                // TODO: add new data
                 let pkgVersion = package.manifest.version?.description ?? "unspecified"
 
                 stream.send("\(hanger)\(package.identity.description)<\(package.manifest.packageLocation)@\(pkgVersion)>\n")
@@ -57,6 +58,7 @@ final class FlatListDumper: DependenciesDumper {
     func dump(graph: ModulesGraph, dependenciesOf rootpkg: ResolvedPackage, on stream: OutputByteStream) {
         func recursiveWalk(packages: [ResolvedPackage]) {
             for package in packages {
+                // TODO: add new data
                 stream.send(package.identity.description).send("\n")
                 if !package.dependencies.isEmpty {
                     recursiveWalk(packages: graph.directDependencies(for: package))
@@ -75,6 +77,7 @@ final class DotDumper: DependenciesDumper {
         func printNode(_ package: ResolvedPackage) {
             let url = package.manifest.packageLocation
             if nodesAlreadyPrinted.contains(url) { return }
+            // TODO: add new data
             let pkgVersion = package.manifest.version?.description ?? "unspecified"
             stream.send(#""\#(url)" [label="\#(package.identity.description)\n\#(url)\n\#(pkgVersion)"]"#).send("\n")
             nodesAlreadyPrinted.insert(url)
@@ -126,7 +129,10 @@ final class JSONDumper: DependenciesDumper {
                 "identity": .string(package.identity.description),
                 "name": .string(package.manifest.displayName), // TODO: remove?
                 "url": .string(package.manifest.packageLocation),
+                // TODO: add new data
                 "version": .string(package.manifest.version?.description ?? "unspecified"),
+                "branch": .string(package.manifest.branch?.description ?? "unspecified"),
+                "revision": .string(package.manifest.revision ?? "unspecified"),
                 "path": .string(package.path.pathString),
                 "dependencies": .array(package.dependencies.compactMap { graph.packages[$0] }.map(convert)),
             ])

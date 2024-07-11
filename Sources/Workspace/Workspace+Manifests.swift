@@ -33,6 +33,7 @@ import struct PackageModel.ProvidedLibrary
 import class PackageModel.Manifest
 import struct PackageModel.PackageIdentity
 import struct PackageModel.PackageReference
+import enum PackageModel.ResolvedPackageVersion
 import enum PackageModel.ProductFilter
 import struct PackageModel.ToolsVersion
 import protocol TSCBasic.FileSystem
@@ -43,6 +44,7 @@ import func TSCBasic.topologicalSort
 import func TSCBasic.transitiveClosure
 import enum TSCUtility.Diagnostics
 import struct TSCUtility.Version
+import struct SourceControl.Revision
 
 // MARK: - Manifest Loading and caching
 
@@ -638,19 +640,21 @@ extension Workspace {
 
         // The kind and version, if known.
         let packageKind: PackageReference.Kind
-        let packageVersion: Version?
+        let resolvedPackageVersion: ResolvedPackageVersion?
         switch managedDependency.state {
         case .sourceControlCheckout(let checkoutState):
             packageKind = managedDependency.packageRef.kind
             switch checkoutState {
-            case .version(let checkoutVersion, _):
-                packageVersion = checkoutVersion
-            default:
-                packageVersion = .none
+            case .version(let checkoutVersion, let revision):
+                resolvedPackageVersion = .version(checkoutVersion, revision: revision.identifier)
+            case .branch(let branchName, let revision):
+                resolvedPackageVersion = .branch(branchName, revision: revision.identifier)
+            case .revision(let revision):
+                resolvedPackageVersion = .revision(revision.identifier)
             }
         case .registryDownload(let downloadedVersion):
             packageKind = managedDependency.packageRef.kind
-            packageVersion = downloadedVersion
+            resolvedPackageVersion = .version(downloadedVersion, revision: nil)
         case .providedLibrary(let path, let version):
             let manifest: Manifest? = try? .forProvidedLibrary(
                 fileSystem: fileSystem,
@@ -661,10 +665,10 @@ extension Workspace {
             return completion(manifest)
         case .custom(let availableVersion, _):
             packageKind = managedDependency.packageRef.kind
-            packageVersion = availableVersion
+            resolvedPackageVersion = .version(availableVersion, revision: nil)
         case .edited, .fileSystem:
             packageKind = .fileSystem(packagePath)
-            packageVersion = .none
+            resolvedPackageVersion = nil
         }
 
         let fileSystem: FileSystem?
@@ -689,7 +693,7 @@ extension Workspace {
             packageKind: packageKind,
             packagePath: packagePath,
             packageLocation: managedDependency.packageRef.locationString,
-            packageVersion: packageVersion,
+            packageVersion: resolvedPackageVersion,
             fileSystem: fileSystem,
             observabilityScope: observabilityScope
         ) { result in
@@ -706,7 +710,7 @@ extension Workspace {
         packageKind: PackageReference.Kind,
         packagePath: AbsolutePath,
         packageLocation: String,
-        packageVersion: Version? = nil,
+        packageVersion: ResolvedPackageVersion? = nil,
         fileSystem: FileSystem? = nil,
         observabilityScope: ObservabilityScope,
         completion: @escaping (Result<Manifest, Error>) -> Void
@@ -734,7 +738,7 @@ extension Workspace {
             packageIdentity: packageIdentity,
             packageKind: packageKind,
             packageLocation: packageLocation,
-            packageVersion: packageVersion.map { (version: $0, revision: nil) },
+            packageVersion: packageVersion,
             currentToolsVersion: self.currentToolsVersion,
             identityResolver: self.identityResolver,
             dependencyMapper: self.dependencyMapper,

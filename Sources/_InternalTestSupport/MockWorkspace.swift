@@ -918,12 +918,12 @@ public final class MockWorkspaceDelegate: WorkspaceDelegate {
         self.append("will resolve dependencies")
     }
 
-    public func willLoadManifest(packageIdentity: PackageIdentity, packagePath: AbsolutePath, url: String, version: Version?, packageKind: PackageReference.Kind) {
-        self.append("will load manifest for \(packageKind.displayName) package: \(url) (identity: \(packageIdentity))")
+    public func willLoadManifest(packageIdentity: PackageIdentity, packagePath: AbsolutePath, url: String, version: ResolvedPackageVersion?, packageKind: PackageReference.Kind) {
+        self.append("will load manifest for \(packageKind.displayName) package: \(url) (identity: \(packageIdentity)) version: \(version?.debugDescription ?? "unknown")")
     }
 
-    public func didLoadManifest(packageIdentity: PackageIdentity, packagePath: AbsolutePath, url: String, version: Version?, packageKind: PackageReference.Kind, manifest: Manifest?, diagnostics: [Basics.Diagnostic], duration: DispatchTimeInterval) {
-        self.append("did load manifest for \(packageKind.displayName) package: \(url) (identity: \(packageIdentity))")
+    public func didLoadManifest(packageIdentity: PackageIdentity, packagePath: AbsolutePath, url: String, version: ResolvedPackageVersion?, packageKind: PackageReference.Kind, manifest: Manifest?, diagnostics: [Basics.Diagnostic], duration: DispatchTimeInterval) {
+        self.append("did load manifest for \(packageKind.displayName) package: \(url) (identity: \(packageIdentity)) version: \(version?.debugDescription ?? "unknown")")
         self.lock.withLock {
             self._manifest = manifest
             self._manifestLoadingDiagnostics = diagnostics

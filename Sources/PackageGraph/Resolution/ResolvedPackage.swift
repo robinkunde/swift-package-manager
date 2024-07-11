@@ -33,6 +33,8 @@ public struct ResolvedPackage {
     /// The underlying package reference.
     public let underlying: Package
 
+    public let version: ResolvedPackageVersion?
+
     /// The modules contained in the package.
     public let modules: IdentifiableSet<ResolvedModule>
 
@@ -58,6 +60,7 @@ public struct ResolvedPackage {
 
     public init(
         underlying: Package,
+        version: ResolvedPackageVersion?,
         defaultLocalization: String?,
         supportedPlatforms: [SupportedPlatform],
         dependencies: [PackageIdentity],
@@ -68,6 +71,7 @@ public struct ResolvedPackage {
         platformVersionProvider: PlatformVersionProvider
     ) {
         self.underlying = underlying
+        self.version = version
         self.products = products
         self.modules = modules
         self.dependencies = dependencies

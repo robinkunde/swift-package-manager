@@ -1216,6 +1216,9 @@ private final class ResolvedPackageBuilder: ResolvedBuilder<ResolvedPackage> {
     /// The package reference.
     let package: Package
 
+    /// The resolved version of the package
+    let version: ResolvedPackageVersion?
+
     /// The product filter applied to the package.
     let productFilter: ProductFilter
 
@@ -1260,6 +1263,7 @@ private final class ResolvedPackageBuilder: ResolvedBuilder<ResolvedPackage> {
         platformVersionProvider: PlatformVersionProvider
     ) {
         self.package = package
+        self.version = nil
         self.productFilter = productFilter
         self.enabledTraits = enabledTraits
         self.isAllowedToVendUnsafeProducts = isAllowedToVendUnsafeProducts
@@ -1274,6 +1278,7 @@ private final class ResolvedPackageBuilder: ResolvedBuilder<ResolvedPackage> {
 
         return ResolvedPackage(
             underlying: self.package,
+            version: self.version,
             defaultLocalization: self.defaultLocalization,
             supportedPlatforms: self.supportedPlatforms,
             dependencies: self.dependencies.map { $0.package.identity },

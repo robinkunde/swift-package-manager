@@ -120,7 +120,7 @@ public protocol ManifestLoaderProtocol {
         packageIdentity: PackageIdentity,
         packageKind: PackageReference.Kind,
         packageLocation: String,
-        packageVersion: (version: Version?, revision: String?)?,
+        packageVersion: ResolvedPackageVersion?,
         identityResolver: IdentityResolver,
         dependencyMapper: DependencyMapper,
         fileSystem: FileSystem,
@@ -194,7 +194,7 @@ extension ManifestLoaderProtocol {
         packageIdentity: PackageIdentity,
         packageKind: PackageReference.Kind,
         packageLocation: String,
-        packageVersion: (version: Version?, revision: String?)?,
+        packageVersion: ResolvedPackageVersion?,
         currentToolsVersion: ToolsVersion,
         identityResolver: IdentityResolver,
         dependencyMapper: DependencyMapper,
@@ -209,7 +209,7 @@ extension ManifestLoaderProtocol {
             let manifestPath = try ManifestLoader.findManifest(packagePath: packagePath, fileSystem: fileSystem, currentToolsVersion: currentToolsVersion)
             let manifestToolsVersion = try ToolsVersionParser.parse(manifestPath: manifestPath, fileSystem: fileSystem)
             // validate the manifest tools-version against the toolchain tools-version
-            try manifestToolsVersion.validateToolsVersion(currentToolsVersion, packageIdentity: packageIdentity, packageVersion: packageVersion?.version?.description ?? packageVersion?.revision)
+            try manifestToolsVersion.validateToolsVersion(currentToolsVersion, packageIdentity: packageIdentity, packageVersion: packageVersion)
 
             self.load(
                 manifestPath: manifestPath,
@@ -238,7 +238,7 @@ extension ManifestLoaderProtocol {
         packageIdentity: PackageIdentity,
         packageKind: PackageReference.Kind,
         packageLocation: String,
-        packageVersion: (version: Version?, revision: String?)?,
+        packageVersion: ResolvedPackageVersion?,
         currentToolsVersion: ToolsVersion,
         identityResolver: IdentityResolver,
         dependencyMapper: DependencyMapper,
@@ -333,7 +333,7 @@ public final class ManifestLoader: ManifestLoaderProtocol {
         packageIdentity: PackageIdentity,
         packageKind: PackageReference.Kind,
         packageLocation: String,
-        packageVersion: (version: Version?, revision: String?)?,
+        packageVersion: ResolvedPackageVersion?,
         identityResolver: IdentityResolver,
         dependencyMapper: DependencyMapper,
         fileSystem: FileSystem,
@@ -367,7 +367,7 @@ public final class ManifestLoader: ManifestLoaderProtocol {
         packageIdentity: PackageIdentity,
         packageKind: PackageReference.Kind,
         packageLocation: String,
-        packageVersion: (version: Version?, revision: String?)?,
+        packageVersion: ResolvedPackageVersion?,
         identityResolver: IdentityResolver,
         dependencyMapper: DependencyMapper,
         fileSystem: FileSystem,
@@ -389,7 +389,7 @@ public final class ManifestLoader: ManifestLoaderProtocol {
         // Validate that the file exists.
         guard fileSystem.isFile(manifestPath) else {
             return callbackQueue.async {
-                completion(.failure(PackageModel.Package.Error.noManifest(at: manifestPath, version: packageVersion?.version)))
+                completion(.failure(PackageModel.Package.Error.noManifest(at: manifestPath, version: packageVersion)))
             }
         }
 
@@ -399,7 +399,7 @@ public final class ManifestLoader: ManifestLoaderProtocol {
             packageIdentity: packageIdentity,
             packageKind: packageKind,
             packageLocation: packageLocation,
-            packageVersion: packageVersion?.version,
+            packageVersion: packageVersion,
             identityResolver: identityResolver,
             dependencyMapper: dependencyMapper,
             fileSystem: fileSystem,
@@ -440,6 +440,7 @@ public final class ManifestLoader: ManifestLoaderProtocol {
                     defaultLocalization: parsedManifest.defaultLocalization,
                     platforms: parsedManifest.platforms,
                     version: packageVersion?.version,
+                    branch: packageVersion?.branch,
                     revision: packageVersion?.revision,
                     toolsVersion: manifestToolsVersion,
                     pkgConfig: parsedManifest.pkgConfig,
@@ -543,7 +544,7 @@ public final class ManifestLoader: ManifestLoaderProtocol {
         packageIdentity: PackageIdentity,
         packageKind: PackageReference.Kind,
         packageLocation: String,
-        packageVersion: Version?,
+        packageVersion: ResolvedPackageVersion?,
         identityResolver: IdentityResolver,
         dependencyMapper: DependencyMapper,
         fileSystem: FileSystem,

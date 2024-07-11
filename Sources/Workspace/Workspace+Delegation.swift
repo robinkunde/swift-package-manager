@@ -18,6 +18,7 @@ import class PackageLoading.ManifestLoader
 import class PackageModel.Manifest
 import struct PackageModel.PackageIdentity
 import struct PackageModel.PackageReference
+import enum PackageModel.ResolvedPackageVersion
 import struct PackageModel.Registry
 import class PackageRegistry.RegistryClient
 import class PackageRegistry.RegistryDownloadsManager
@@ -35,7 +36,7 @@ public protocol WorkspaceDelegate: AnyObject {
         packageIdentity: PackageIdentity,
         packagePath: AbsolutePath,
         url: String,
-        version: Version?,
+        version: ResolvedPackageVersion?,
         packageKind: PackageReference.Kind
     )
     /// The workspace has loaded a package manifest, either successfully or not. The manifest is nil if an error occurs,
@@ -45,7 +46,7 @@ public protocol WorkspaceDelegate: AnyObject {
         packageIdentity: PackageIdentity,
         packagePath: AbsolutePath,
         url: String,
-        version: Version?,
+        version: ResolvedPackageVersion?,
         packageKind: PackageReference.Kind,
         manifest: Manifest?,
         diagnostics: [Diagnostic],

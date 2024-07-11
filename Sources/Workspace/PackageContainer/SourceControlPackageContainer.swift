@@ -403,13 +403,19 @@ internal final class SourceControlPackageContainer: PackageContainer, CustomStri
     private func loadManifest(fileSystem: FileSystem, version: Version?, revision: String) throws -> Manifest {
         // Load the manifest.
         // FIXME: this should not block
+        let resolvedPackageVersion: ResolvedPackageVersion
+        if let version {
+            resolvedPackageVersion = .version(version, revision: revision)
+        } else {
+            resolvedPackageVersion = .revision(revision)
+        }
         return try temp_await {
             self.manifestLoader.load(
                 packagePath: .root,
                 packageIdentity: self.package.identity,
                 packageKind: self.package.kind,
                 packageLocation: self.package.locationString,
-                packageVersion: (version: version, revision: revision),
+                packageVersion: resolvedPackageVersion,
                 currentToolsVersion: self.currentToolsVersion,
                 identityResolver: self.identityResolver,
                 dependencyMapper: self.dependencyMapper,

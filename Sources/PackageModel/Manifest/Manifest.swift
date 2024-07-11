@@ -56,6 +56,9 @@ public final class Manifest: Sendable {
     /// The version this package was loaded from, if known.
     public let version: Version?
 
+    /// The branch this package was loaded from, if known.
+    public let branch: String?
+
     /// The revision this package was loaded from, if known.
     public let revision: String?
 
@@ -112,6 +115,7 @@ public final class Manifest: Sendable {
         defaultLocalization: String?,
         platforms: [PlatformDescription],
         version: TSCUtility.Version?,
+        branch: String?,
         revision: String?,
         toolsVersion: ToolsVersion,
         pkgConfig: String?,
@@ -131,6 +135,7 @@ public final class Manifest: Sendable {
         self.defaultLocalization = defaultLocalization
         self.platforms = platforms
         self.version = version
+        self.branch = branch
         self.revision = revision
         self.toolsVersion = toolsVersion
         self.pkgConfig = pkgConfig
@@ -595,6 +600,7 @@ extension Manifest {
             defaultLocalization: nil,
             platforms: [],
             version: version,
+            branch: nil,
             revision: nil,
             toolsVersion: .v6_0,
             pkgConfig: nil,

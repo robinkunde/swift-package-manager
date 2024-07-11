@@ -152,7 +152,7 @@ public class RegistryPackageContainer: PackageContainer {
                             packageIdentity: self.package.identity,
                             packageKind: self.package.kind,
                             packageLocation: self.package.locationString,
-                            packageVersion: (version: version, revision: nil),
+                            packageVersion: ResolvedPackageVersion.version(version, revision: nil),
                             currentToolsVersion: self.currentToolsVersion,
                             identityResolver: self.identityResolver,
                             dependencyMapper: self.dependencyMapper,

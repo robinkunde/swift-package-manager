@@ -250,7 +250,7 @@ final class CommandWorkspaceDelegate: WorkspaceDelegate {
         self.observabilityScope.emit(debug: "Evaluated manifest for '\(packageIdentity)' (from '\(packageLocation)') in \(duration.descriptionInSeconds)")
     }
 
-    func didLoadManifest(packageIdentity: PackageIdentity, packagePath: AbsolutePath, url: String, version: Version?, packageKind: PackageReference.Kind, manifest: Manifest?, diagnostics: [Basics.Diagnostic], duration: DispatchTimeInterval) {
+    func didLoadManifest(packageIdentity: PackageIdentity, packagePath: AbsolutePath, url: String, version: ResolvedPackageVersion?, packageKind: PackageReference.Kind, manifest: Manifest?, diagnostics: [Basics.Diagnostic], duration: DispatchTimeInterval) {
         self.observabilityScope.emit(debug: "Loaded manifest for '\(packageIdentity)' (from '\(url)') in \(duration.descriptionInSeconds)")
     }
 
@@ -261,7 +261,7 @@ final class CommandWorkspaceDelegate: WorkspaceDelegate {
     func didDownloadAllBinaryArtifacts() {}
     func willCompileManifest(packageIdentity: PackageIdentity, packageLocation: String) {}
     func willEvaluateManifest(packageIdentity: PackageIdentity, packageLocation: String) {}
-    func willLoadManifest(packageIdentity: PackageIdentity, packagePath: AbsolutePath, url: String, version: Version?, packageKind: PackageReference.Kind) {}
+    func willLoadManifest(packageIdentity: PackageIdentity, packagePath: AbsolutePath, url: String, version: ResolvedPackageVersion?, packageKind: PackageReference.Kind) {}
 }
 
 public extension _SwiftCommand {

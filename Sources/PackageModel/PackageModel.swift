@@ -89,7 +89,7 @@ public final class Package {
     }
 
     public enum Error: Swift.Error, Equatable {
-        case noManifest(at: AbsolutePath, version: Version?)
+        case noManifest(at: AbsolutePath, version: ResolvedPackageVersion?)
     }
 }
 
