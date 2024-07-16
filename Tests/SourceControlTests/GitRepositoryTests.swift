@@ -768,4 +768,34 @@ class GitRepositoryTests: XCTestCase {
             XCTAssertNoThrow(try checkoutRepo.getCurrentRevision())
         }
     }
+
+    func testIsLocationEquivalent() throws {
+        let s1 = RepositorySpecifier(url: "https://github.com/mona/LinkedList")
+        let s2 = RepositorySpecifier(url: "https://github.com/mona/LinkedList.git")
+        let s3 = RepositorySpecifier(url: "git@github.com:mona/LinkedList.git")
+        let s4 = RepositorySpecifier(url: "git@github.com:mona/LinkedList")
+        let s5 = RepositorySpecifier(path: "/LinkedList")
+
+        XCTAssertTrue(s1.isLocationEquivalent(to: s2.url))
+        XCTAssertTrue(s2.isLocationEquivalent(to: s1.url))
+        XCTAssertTrue(s3.isLocationEquivalent(to: s4.url))
+        XCTAssertTrue(s4.isLocationEquivalent(to: s3.url))
+        XCTAssertFalse(s1.isLocationEquivalent(to: s3.url))
+        XCTAssertFalse(s3.isLocationEquivalent(to: s1.url))
+        XCTAssertFalse(s1.isLocationEquivalent(to: s4.url))
+        XCTAssertFalse(s4.isLocationEquivalent(to: s1.url))
+        XCTAssertFalse(s2.isLocationEquivalent(to: s3.url))
+        XCTAssertFalse(s3.isLocationEquivalent(to: s2.url))
+        XCTAssertFalse(s2.isLocationEquivalent(to: s4.url))
+        XCTAssertFalse(s4.isLocationEquivalent(to: s2.url))
+
+        XCTAssertFalse(s5.isLocationEquivalent(to: s1.url))
+        XCTAssertFalse(s5.isLocationEquivalent(to: s2.url))
+        XCTAssertFalse(s5.isLocationEquivalent(to: s3.url))
+        XCTAssertFalse(s5.isLocationEquivalent(to: s4.url))
+        XCTAssertFalse(s1.isLocationEquivalent(to: s5.url))
+        XCTAssertFalse(s2.isLocationEquivalent(to: s5.url))
+        XCTAssertFalse(s3.isLocationEquivalent(to: s5.url))
+        XCTAssertFalse(s4.isLocationEquivalent(to: s5.url))
+    }
 }

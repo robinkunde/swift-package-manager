@@ -212,7 +212,7 @@ public struct GitRepositoryProvider: RepositoryProvider, Cancellable {
 
     public func isValidDirectory(_ directory: Basics.AbsolutePath, for repository: RepositorySpecifier) throws -> Bool {
         let remoteURL = try self.git.run(["-C", directory.pathString, "config", "--get", "remote.origin.url"])
-        return remoteURL == repository.url
+        return repository.isLocationEquivalent(to: remoteURL)
     }
 
     public func copy(from sourcePath: Basics.AbsolutePath, to destinationPath: Basics.AbsolutePath) throws {

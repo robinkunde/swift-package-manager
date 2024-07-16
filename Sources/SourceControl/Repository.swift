@@ -12,6 +12,7 @@
 
 import Basics
 import Foundation
+import struct PackageModel.CanonicalPackageURL
 
 /// Specifies a repository address.
 public struct RepositorySpecifier: Hashable, Sendable {
@@ -64,6 +65,13 @@ public struct RepositorySpecifier: Hashable, Sendable {
             case .url(let url):
                 return url.absoluteString
             }
+        }
+    }
+
+    public func isLocationEquivalent(to other: String) -> Bool {
+        switch self.location {
+        case .path(let path): return (path.pathString == other)
+        case .url(let url): return (CanonicalPackageURL(url.absoluteString) == CanonicalPackageURL(other))
         }
     }
 }
